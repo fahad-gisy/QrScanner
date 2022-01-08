@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<com.google.android.material.bottomnavigation.BottomNavigationView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    >
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/containerApp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightGreen"
+        app:itemIconTint="@color/white"
+        app:itemRippleColor="@color/lightgreen"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="selected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_nav"/>
 
 
 
 
-</com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

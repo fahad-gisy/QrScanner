@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <item
+        android:id="@+id/history"
+        android:title="قائمة الكود"
+        android:icon="@drawable/history"/>
+    <item
+        android:id="@+id/fav"
+        android:title="الكودات المفضلة"
+        android:icon="@drawable/star_box_outline"/>
+
+    <item
+        android:id="@+id/qrScan"
+        android:title="مسح الكودات"
+        android:icon="@drawable/qrcode_scan"/>
+
+
+
 </menu>
