@@ -9,8 +9,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.widget.ImageViewCompat
 import com.google.zxing.Result
+import db.DBHelper
+import db.DBHelperI
+import db.QrClasses.time.QrResultDialog
+import db.QrResultDatabase
 import me.dm7.barcodescanner.zxing.ZXingScannerView
                                          //هنا نرث من كلاس الريزولت
 class ScannerFragment : Fragment(),ZXingScannerView.ResultHandler {
@@ -24,6 +27,8 @@ var imageViewFlash:ImageView? = null
 var frameLayoutCam:FrameLayout? = null
  private lateinit var mView:View // سوينا متغير فيو و ساويناه ب الفيو حقت الفراقميت
  private lateinit var scannerView:ZXingScannerView // متغير سكانر
+ private lateinit var resultDialog: QrResultDialog
+ private lateinit var dbHelperI: DBHelperI
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,12 +36,31 @@ var frameLayoutCam:FrameLayout? = null
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_qrscanner, container, false)
         connectVs(mView)
-        scannerInstall()
+        init()
+        initViews()
         flashHandle()
         return mView.rootView
     }
 
- private fun flashHandle() { //صوره الفلاش
+private fun init() {
+ dbHelperI = DBHelper(QrResultDatabase.getAppDatabase(requireContext())!! )
+ }
+
+ private fun initViews() {
+    scannerInstall()
+    setResultDialog()
+}
+
+private fun setResultDialog() { //حطينا الكاتسم ديالوق في الفراقمت
+         resultDialog = QrResultDialog(requireContext())
+         resultDialog.setOnDismissListener(object: QrResultDialog.QrDismissListener{
+             override fun onDismiss() {
+                 scannerView.resumeCameraPreview(this@ScannerFragment)
+             }
+         })
+}
+
+                                             private fun flashHandle() { //صوره الفلاش
 imageViewFlash?.setOnClickListener {
     if(it.isSelected){
         flashOff()// لو تم الضغط على صورة الفلاش
@@ -92,9 +116,21 @@ scannerView.stopCamera()//نوقف الكاميرا اذا طلع المستخد
 
             //هنا نحدد كيف نعرض الريزولت
 override fun handleResult(rawResult: Result?) {
-
-Toast.makeText(requireContext(),rawResult?.text,Toast.LENGTH_SHORT).show()
-scannerView.resumeCameraPreview(this)
+onQrResult(rawResult!!.text)
 
     }
+
+private fun onQrResult(text: String?) {
+      if (text.isNullOrEmpty()){
+          Toast.makeText(requireContext(),"لا يوجد نتيجة!!",Toast.LENGTH_SHORT).show()
+      }else{
+          saveToDatabase(text)
+      }
+ }
+
+private fun saveToDatabase(result: String) {
+  val insertedId =  dbHelperI.insertQrResult(result)
+    val qrResult = dbHelperI.getQrResult(insertedId)
+      resultDialog.show(qrResult)
 }
+ }

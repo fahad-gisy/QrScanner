@@ -7,6 +7,10 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import db.QrClasses.QrResult
+import db.QrResultDatabase
+import java.util.*
+
 var bottomNav:BottomNavigationView? = null
 var viewPager:ViewPager? = null
 class MainActivity : AppCompatActivity() {
@@ -17,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         setPagerAdapter()
         bottomNav()
         viewPagerListener()
+
+        var qrResult = QrResult(result = "FHD", resultType = "TEXT", fav = false, calender = Calendar.getInstance())
+        QrResultDatabase.getAppDatabase(this)?.getQrDao()?.insertQrResult(qrResult)
 
     }
 private fun connectVs (){
